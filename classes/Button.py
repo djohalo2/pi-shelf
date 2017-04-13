@@ -13,9 +13,14 @@ class Button:
         :param input_pin: De GPIO pin die wordt gebruikt op de raspberry
                           als int
         """
-        self.__button_input_pin = input_pin
-        GPIO.setup(self.__button_input_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        self.__fake_pressed = False
+        # sla de button pin op.
+        self._button_input_pin = input_pin
+
+        # Geef de pin setup op.
+        GPIO.setup(self._button_input_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+        # Geef aan de de fake pressed false is.
+        self._fake_pressed = False
 
     def is_pressed(self) -> bool:
         """
@@ -26,8 +31,8 @@ class Button:
         """
         # De raspberry geeft false terug als de button is ingedrukt en true
         # als deze niet is ingedrukt, dit is vrij verwarrend vandaar de we
-        # return not gebruiken, hiermee draaien we deze logica om
-        return not GPIO.input(self.__button_input_pin)
+        # return not gebruiken, hiermee draaien we deze logica om.
+        return not GPIO.input(self._button_input_pin)
 
     def is_fake_pressed(self) -> bool:
         """
@@ -44,7 +49,7 @@ class Button:
 
         :return: fake_pressed als boolean
         """
-        return self.__fake_pressed
+        return self._fake_pressed
 
     @fake_pressed.setter
     def fake_pressed(self, value: bool) -> None:
@@ -52,7 +57,7 @@ class Button:
         Setter voor fake_pressed.
         :param value: True of False
         """
-        self.__fake_pressed = value
+        self._fake_pressed = value
 
 
 def main() -> None:
@@ -63,7 +68,10 @@ def main() -> None:
     # Zet de pin mode op de Raspberry Pi.
     GPIO.setmode(GPIO.BOARD)
 
+    # Defineer een nieuwe button op pin 36.
     button = Button(36)
+
+    # Geef terug of de knop is ingedrukt.
     print(button.is_pressed())
 
 

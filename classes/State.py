@@ -120,6 +120,7 @@ def main() -> None:
     # Print de huidige status.
     print(state.current_state)
 
+
 # Zorg ervoor dat de main functie niet wordt uitgevoerd als de klasse
 # wordt geimporteerd
 if __name__ == '__main__':

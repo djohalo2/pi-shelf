@@ -14,9 +14,12 @@ class Afstandsensor:
         :param input_pin: De GPIO pin die wordt gebruikt op de
          raspberry als int.
         """
+        # Instansieer de afstand sensor pin.
         self._afstandsensor_input_pin = input_pin
         GPIO.setup(self._afstandsensor_input_pin, GPIO.IN,
                    pull_up_down=GPIO.PUD_UP)
+
+        # Zet fake opgepakt op false.
         self._fake_opgepakt = False
 
     def is_opgepakt(self) -> bool:
@@ -71,5 +74,7 @@ def main() -> None:
     print(afstandsensor.is_opgepakt())
 
 
+# Zorg ervoor dat de main functie niet wordt uitgevoerd als de klasse
+# wordt geimporteerd
 if __name__ == '__main__':
     main()

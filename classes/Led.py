@@ -14,21 +14,22 @@ class Led:
 
         :param output_pin: De GPIO pin die gebruikt wordt op de Raspberry.
         """
+        # Sla de output pin op.
         self._led_output_pin = output_pin
+
+        # Stel de pin setup in.
         GPIO.setup(self._led_output_pin, GPIO.OUT)
 
     def zet_aan(self) -> None:
         """
         Zet de LED aan.
         """
-        # Zet de led aan.
         GPIO.output(self._led_output_pin, True)
 
     def zet_uit(self) -> None:
         """
         Zet de LED uit.
         """
-        # Zet de led uit.
         GPIO.output(self._led_output_pin, False)
 
 
@@ -58,5 +59,8 @@ def main() -> None:
     geel.zet_uit()
     groen.zet_uit()
 
+
+# Zorg ervoor dat de main functie niet wordt uitgevoerd als de klasse
+# wordt geimporteerd
 if __name__ == '__main__':
     main()
