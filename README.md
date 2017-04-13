@@ -3,6 +3,7 @@
 Voer het volgende script uit op de Raspberry Pi.
 
 ```bash
+sudo su
 sh install.sh
 cp .env.example .env
 ```
