@@ -93,7 +93,7 @@ def main():
     while True:
         # Send some test
         scherm.lcd_string("Nike Air Max    ", scherm.LCD_LINE_1)
-        scherm.lcd_string("Prijs: \u20ac145", scherm.LCD_LINE_2)
+        scherm.lcd_string("Prijs: \337C 145", scherm.LCD_LINE_2)
         # LENGTH         ("                ")
 
 
