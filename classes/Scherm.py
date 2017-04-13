@@ -1,7 +1,11 @@
 import smbus
 import time
+from threading import Thread, ThreadError
 
 class Scherm:
+    """
+    Klasse om Scherm aan te sturen
+    """
 
     # Define some device parameters
     I2C_ADDR = 0x3f  # I2C device address
@@ -29,8 +33,16 @@ class Scherm:
     # bus = smbus.SMBus(0)  # Rev 1 Pi uses 0
     bus = smbus.SMBus(1)  # Rev 2 Pi uses 1
 
+    def __init__(self):
+        """
+        Uitvoeren code bij initialiseren klasse
+        """
+        self.lcd_init()
 
     def lcd_init(self):
+        """
+        Initialiseren van lcd scherm
+        """
         # Initialise display
         self.lcd_byte(0x33, self.LCD_CMD)  # 110011 Initialise
         self.lcd_byte(0x32, self.LCD_CMD)  # 110010 Initialise
@@ -42,10 +54,9 @@ class Scherm:
 
 
     def lcd_byte(self, bits, mode):
-        # Send byte to data pins
-        # bits = the data
-        # mode = 1 for data
-        #        0 for command
+        """
+        Versturen van bytes naar de datapinnen
+        """
 
         bits_high = mode | (bits & 0xF0) | self.LCD_BACKLIGHT
         bits_low = mode | ((bits << 4) & 0xF0) | self.LCD_BACKLIGHT
@@ -78,23 +89,52 @@ class Scherm:
         for i in range(self.LCD_WIDTH):
             self.lcd_byte(ord(message[i]), self.LCD_CHR)
 
-    # def get_information():
+    def thread_is_alive(self):
+        """
+        Controleert of er een thread bestaat.
+        :return: True of False op basis op de thread bestaat, als boolean
+        """
+        try:
+            return self.__information_thread.is_alive()
+        except ThreadError as e:
+            print("Exception (Scherm, thread_is_alive: {0})".format(e))
+            return False
+        except AttributeError as e:
+            print("Exception (Scherm, thread_is_alive: {0})".format(e))
+            return False
 
+    def information_in_thread(self, tekst_boven, tekst_onder):
+        """
+        Voer de set_information functie uit in een aparte thread zodat er andere
+        code tegelijkertijd gedraaid kan worden
+        :param tekst_boven: De tekst voor de bovenste regel van de display 
+                        als string
+        :param tekst_onder: De tekst voor de bovenste regel van de display
+                        als string
+        """
+        self.__information_thread = Thread(target=self.set_information,
+                                           args=(tekst_boven, tekst_onder))
+        self.__information_thread.start()
+
+    def set_information(self, tekst_boven, tekst_onder):
+        """
+        Zet de teksten die op de boven en onder regel van de display getoond moeten worden
+        :param tekst_boven: De tekst voor de bovenste regel van de display 
+                        als string
+        :param tekst_onder: De tekst voor de bovenste regel van de display
+                        als string
+        """
+
+        self.lcd_string(tekst_boven, self.LCD_LINE_1)
+        self.lcd_string(tekst_onder, self.LCD_LINE_2)
 
 
 
 def main():
     scherm = Scherm()
+    scherm.information_in_thread("Nike", "5 euro op je muil")
     # Main program block
 
-    # Initialise display
-    scherm.lcd_init()
-
-    while True:
-        # Send some test
-        scherm.lcd_string("Nike Air Max    ", scherm.LCD_LINE_1)
-        scherm.lcd_string("Prijs: \337C 145", scherm.LCD_LINE_2)
-        # LENGTH         ("                ")
 
 
 if __name__ == '__main__':

@@ -16,7 +16,6 @@ class Shelf:
     def authenticate(self):
         r = requests.post("https://ipmedt5.roddeltrein.nl/api/authenticate",
                           data={'email': 's1095067@student.hsleiden.nl', 'password': 'secret'})
-        r.headers['content-type']
         if(r.status_code == 200):
             response = r.json()
             self._token = response['token']
