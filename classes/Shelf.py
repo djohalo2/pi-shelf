@@ -3,41 +3,152 @@ import requests
 
 class Shelf:
 
-    def __init__(self):
-        self.set_mac_address()
-        print(self.get_mac_address())
-        self.authenticate()
-        print(self.get_token())
+    BASE_URL = "https://ipmedt5.roddeltrein.nl/api"
 
+    def __init__(self):
+        self._token = ""
+        self.set_mac_address()
+        self.connect()
+        self.authenticate()
 
     def connect(self):
-        print("connect")
+        """
+        Connect call om de shelf te connecten aan de backend
+        :return: True of False op basis van status code van de request
+        """
+        r = requests.post(self.BASE_URL + "/shelves/" + self.get_mac_address() + "/connect",
+                          data={'private_key': 'secret'})
+        if (r.status_code == 200):
+            return True
+        else:
+            return False
 
     def authenticate(self):
-        r = requests.post("https://ipmedt5.roddeltrein.nl/api/authenticate",
-                          data={'email': 's1095067@student.hsleiden.nl', 'password': 'secret'})
+        """
+        Authenticeer de shelf met inloggegevens om een token te ontvangen
+        :return: Bij succesvol authenticatie geef token terug, anders False
+        """
+
+        r = requests.post(self.BASE_URL + "/authenticate/shelf",
+                          data={'mac_address': self.get_mac_address(), 'private_key': 'secret'})
         if(r.status_code == 200):
             response = r.json()
             self._token = response['token']
-            return self._token
         else:
-            return false
+            return False
 
     def get_token(self):
         return self._token
 
+    def get_headers(self):
+        return {'Authorization': 'Bearer ' + self.get_token()}
+
     def authenticate_check(self):
-        print("check")
+        """
+        Controleer of token nog geldig is 
+        :return: True of False op basis van status code van de request
+        """
+
+        r = requests.post(self.BASE_URL + "/authenticate/shelf/check",
+                          headers=self.get_headers())
+        print(r.text)
+        if(r.status_code == 200):
+            return True
+        else:
+            return False
+
+    def schoen_opgepakt(self):
+        """
+        Post call als de schoen is opgepakt
+        :return: True of False op basis van status code van de request
+        """
+
+        r = requests.post(self.BASE_URL + "/shelves/" + self.get_mac_address() + "/actions/picked_up",
+                          headers=self.get_headers())
+
+        if(r.status_code == 200):
+            return True
+        else:
+            return False
+
+    def maat_gescanned(self, uuid_tag):
+        """
+        Post call als een maat wordt gescanned
+        :return: Geeft beschikbare maten terug indien succesvol, anders False
+        """
+
+        r = requests.post(
+            self.BASE_URL + "/shelves/" + self.get_mac_address + "/tags/" + uuid_tag + "/actions/maat_gescanned",
+                          headers=self.get_headers())
+
+        if (r.status_code == 200):
+            return r.json()
+        else:
+            return False
+
+    def knop_ingedrukt(self, uuid_tag):
+        """
+        Post call als de knop is ingedrukt
+        :return: True of False op basis van status code van de request
+        """
+
+        r = requests.post(self.BASE_URL + "/shelves/" + self.get_mac_address() + "/tags/" + uuid_tag +
+                          "/actions/knop_ingedrukt", headers=self.get_headers())
+
+        if (r.status_code == 200):
+            return True
+        else:
+            return False
+
+    def get_shelf_information(self):
+        """
+        Vraag shelf informatie op 
+        :return: Geeft demo model informatie terug indien succesvol, anders False
+        """
+
+        r = requests.get(self.BASE_URL + "/shelves/" + self.get_mac_address(),
+                          headers=self.get_headers())
+
+        if (r.status_code == 200):
+            return r.json()
+        else:
+            return False
+
+    def kan_koppelen(self):
+        """
+        Vraag shelf informatie op 
+        :return: Geeft demo model informatie terug indien succesvol, anders False
+        """
+
+        r = requests.get(self.BASE_URL + "/settings/kan_koppelen",
+                         headers=self.get_headers())
+
+        if (r.status_code == 200):
+            return r.json()["data"]["value"]
+        else:
+            return False
 
     def set_mac_address(self):
+        """
+        Zet het mac_address van de shelf op basis van het mac_address van de Pi
+        """
         mac_dec = get_mac()
         self._mac_address = "".join(c + ":" if i % 2 else c for i, c in enumerate(hex(mac_dec)[2:].zfill(12)))[:-1]
 
     def get_mac_address(self):
+        """
+        Getter voor mac_address
+        :return: Geef het mac_address terug 
+        """
         return self._mac_address
 
 def main():
-    print("main")
+    shelf = Shelf()
+
+    print(shelf.authenticate_check())
+    print(shelf.schoen_opgepakt())
+    print(shelf.get_shelf_information())
+    print(shelf.kan_koppelen())
 
 
 if __name__ == "__main__":

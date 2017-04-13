@@ -131,8 +131,10 @@ class Scherm:
 
 
 def main():
+
     scherm = Scherm()
-    scherm.information_in_thread("Nike", "5 euro op je muil")
+    scherm.information_in_thread("Nike", "test")
+
     # Main program block
 
 

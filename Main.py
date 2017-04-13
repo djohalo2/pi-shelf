@@ -5,4 +5,3 @@ shelf = Shelf()
 scherm = Scherm()
 
 scherm.set_information("Nikey", "150 euro")
-print("hooooooi")
