@@ -59,7 +59,7 @@ class Reader:
         """
         return self._fake_scanned
 
-    @fake_pressed.setter
+    @fake_scanned.setter
     def fake_scanned(self, value: bool) -> None:
         """
         Setter voor fake_scanned.
