@@ -3,13 +3,30 @@
 import signal
 import time
 import sys
+import requests
+import RPi.GPIO as GPIO
 
 from pirc522 import RFID
+from uuid import getnode as get_mac
+
+trackingPin = 11
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(trackingPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 run = True
 rdr = RFID()
 util = rdr.util()
 util.debug = True
+
+def authenticate_shelf():
+    r = requests.post("https://ipmedt5.roddeltrein.nl/api/authenticate",
+                      data = {'email':'s1095067@student.hsleiden.nl', 'password': 'secret'})
+    r.headers['content-type']
+    response = r.json()
+    token = response['token']
+    return token
+
 
 def end_read(signal,frame):
     global run
@@ -20,26 +37,32 @@ def end_read(signal,frame):
 
 signal.signal(signal.SIGINT, end_read)
 
-print("Starting")
-while run:
-    rdr.wait_for_tag()
+def main():
+    mac = get_mac()
+    finalMac = "".join(c + ":" if i % 2 else c for i, c in enumerate(hex(mac)[2:].zfill(12)))[:-1]
+    print(finalMac)
 
-    (error, data) = rdr.request()
-    if not error:
-        print("\nDetected: " + format(data, "02x"))
+    token = authenticate_shelf()
+    print(token)
+    print("test")
 
-    (error, uid) = rdr.anticoll()
-    if not error:
-        print("Card read UID: "+str(uid[0])+","+str(uid[1])+","+str(uid[2])+","+str(uid[3]))
+    print("Starting")
+    while run:
+        print(GPIO.input(trackingPin))
+        rdr.wait_for_tag()
 
-        print("Setting tag")
-        util.set_tag(uid)
-        print("\nAuthorizing")
-        #util.auth(rdr.auth_a, [0x12, 0x34, 0x56, 0x78, 0x96, 0x92])
-        util.auth(rdr.auth_b, [0x74, 0x00, 0x52, 0x35, 0x00, 0xFF])
-        print("\nReading")
-        util.read_out(4)
-        print("\nDeauthorizing")
-        util.deauth()
+        (error, data) = rdr.request()
+        if not error:
+            print("\nDetected: " + format(data, "02x"))
 
-        time.sleep(1)
+        (error, uid) = rdr.anticoll()
+        if not error:
+            print("Card read UID: "+str(uid[0])+","+str(uid[1])+","+str(uid[2])+","+str(uid[3]))
+
+            tagId = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
+            print(tagId)
+
+            time.sleep(1)
+
+if __name__ == "__main__":
+    main()
