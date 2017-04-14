@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
 from pirc522 import RFID
-from time import sleep
 
 
 class Reader:

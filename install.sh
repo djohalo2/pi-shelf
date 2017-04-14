@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-pip install -U python-dotenv
+pip3 install -U python-dotenv
+pip3 install pi-rc522
+apt-get install python-smbus
