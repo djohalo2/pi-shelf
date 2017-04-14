@@ -100,6 +100,21 @@ class Shelf:
         else:
             return False
 
+    def demo_gescanned(self, uuid_tag):
+        """
+        Post call als een maat wordt gescanned
+        :return: Geeft beschikbare maten terug indien succesvol, anders False
+        """
+
+        r = requests.post(
+            self._base_url + "/shelves/" + self.get_mac_address() + "/tags/" + uuid_tag + "/scanned",
+            headers=self.get_headers())
+
+        if r.status_code == 200:
+            return r.json()
+        else:
+            return False
+
     def knop_ingedrukt(self, uuid_tag):
         """
         Post call als de knop is ingedrukt
