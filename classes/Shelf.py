@@ -107,7 +107,7 @@ class Shelf:
         """
 
         r = requests.post(
-            self._base_url + "/shelves/" + self.get_mac_address() + "/tags/" + uuid_tag + "/scanned",
+            self._base_url + "/shelves/" + self.get_mac_address() + "/demos/" + uuid_tag + "/scanned",
             headers=self.get_headers())
 
         if r.status_code == 200:
