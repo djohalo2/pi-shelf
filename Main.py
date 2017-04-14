@@ -116,7 +116,7 @@ try:
         # Controleer of de knop losgelaten is en fake ingedrukt is.
         if not button.is_pressed() and button.is_fake_pressed():
 
-            if not reader.huidige_uuid:
+            if reader.read():
                 button.fake_pressed = False
 
         # Wacht 200 milliseconden.
