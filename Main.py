@@ -5,11 +5,12 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 from classes.Afstandsensor import Afstandsensor
+from classes.API import API
 from classes.Button import Button
 from classes.Led import Led
 from classes.Reader import Reader
 from classes.Scherm import Scherm
-from classes.API import API
+from classes.Shelf import Shelf
 from classes.State import State
 
 from util.GPIOFuckUp import GPIOFuckUp
@@ -43,6 +44,9 @@ display = Scherm()
 # Instantieer API.
 API = API(os.environ.get("BASE_URL"), os.environ.get("PRIVATE_KEY"))
 
+# Instantieer shelf.
+shelf = Shelf(led_red, led_yellow, led_green)
+
 # Instantieer states.
 state = State()
 
@@ -67,7 +71,8 @@ try:
                 # Geef aan dat de maat gescanned is.
                 maten = API.maat_gescanned(reader.uuid)
 
-                print(maten)
+                # Handel de ledjes af.
+                shelf.bepaal_ledjes(maten)
 
             # Er gaat een nieuwe schoen gekoppelt worden
             if API.kan_koppelen():
