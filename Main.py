@@ -113,6 +113,8 @@ try:
             # Controleer of de reader een uuid.
             if reader.heeft_uuid():
 
+                print("Shelf heeft een UUID.")
+
                 # Doe API call.
                 API.knop_ingedrukt(reader.uuid)
 

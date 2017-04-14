@@ -125,6 +125,8 @@ class API:
             self._base_url + "/shelves/" + self.get_mac_address() + "/tags/" + uuid_tag +
             "/actions/knop_ingedrukt", headers=self.get_headers())
 
+        print(r.json())
+
         if r.status_code == 200:
             return True
         else:
@@ -176,12 +178,12 @@ class API:
 
 
 def main():
-    shelf = Shelf("http://localhost:8000/api/", 'changeme')
+    api = API("http://localhost:8000/api/", 'changeme')
 
-    print(shelf.authenticate_check())
-    print(shelf.schoen_opgepakt())
-    print(shelf.get_shelf_information())
-    print(shelf.kan_koppelen())
+    print(api.authenticate_check())
+    print(api.schoen_opgepakt())
+    print(api.get_shelf_information())
+    print(api.kan_koppelen())
 
 
 if __name__ == "__main__":
