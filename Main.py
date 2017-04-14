@@ -14,9 +14,12 @@ from classes.State import State
 
 from util.GPIOFuckUp import GPIOFuckUp
 
+# Alle GPIO pinnen worden op false gezet
+GPIOFuckUp()
+
 # Board mode.
-GPIO.setmode(GPIO.BOARD)
 GPIO.cleanup()
+GPIO.setmode(GPIO.BOARD)
 
 # Instantieer de .env.
 load_dotenv(find_dotenv())
