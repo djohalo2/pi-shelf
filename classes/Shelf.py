@@ -26,19 +26,29 @@ class Shelf:
         # Print alles
         if response_api['data']['sizes']:
 
+            # Standaard is er geen andere maat.
             andere_maat = False
 
+            # Ga door alle maten heen.
             for size in response_api['data']['sizes']:
 
+                # Vergelijk de maten.
                 if size.get('eu_size') == response_api['data']['tag']['size']['eu_size']:
 
+                    # Zet het groene ledje aan.
                     self._led_green.zet_aan()
+
+                    # Zet op false.
+                    andere_maat = False
                     break
 
-                else:
-                    andere_maat = True
+                # Geef aan dat er andere maten zijn.
+                andere_maat = True
 
+            # Als er een andere maat is.
             if andere_maat:
+
+                # Zet het gele ledje aan.
                 self._led_yellow.zet_aan()
 
         # Als er geen maten zijn.
