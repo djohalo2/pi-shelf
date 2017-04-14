@@ -84,7 +84,7 @@ try:
                 demo = API.demo_gescanned(reader.uuid)
 
         # Controleer of de reader een UUID heeft.
-        if not reader.uuid:
+        if not reader.heeft_uuid():
 
             # Sla de huidige UUID op.
             reader.huidige_uuid = reader.uuid
