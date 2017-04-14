@@ -70,7 +70,7 @@ try:
                 print(maten)
 
             # Er gaat een nieuwe schoen gekoppelt worden
-            elif shelf.kan_koppelen():
+            if shelf.kan_koppelen():
 
                 # Geef aan dat er een nieuwe demo gescanned is.
                 demo = shelf.demo_gescanned(reader.uuid)
