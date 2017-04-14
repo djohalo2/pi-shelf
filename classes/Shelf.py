@@ -30,16 +30,13 @@ class Shelf:
 
             for size in response_api['data']['sizes']:
 
-                print(type(size))
+                if size.get('eu_size') == response_api['data']['size']['eu_size']:
 
-                print(size['eu_size'])
-                # if size['eu_size'] == response_api['data']['size']['eu_size']:
-                #
-                #     self._led_green.zet_aat()
-                #     break
-                #
-                # else:
-                #     andere_maat = True
+                    self._led_green.zet_aat()
+                    break
+
+                else:
+                    andere_maat = True
 
             if andere_maat:
                 self._led_yellow.zet_aan()
