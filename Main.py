@@ -116,18 +116,16 @@ try:
         # Controleer of de knop losgelaten is en fake ingedrukt is.
         if not button.is_pressed() and button.is_fake_pressed():
 
+            print("Knop is nu niet ingedrukt maar voorheen wel.")
+
+            print("Reader is uitgelezen: " + str(reader.read()))
+
             if reader.read():
+
                 button.fake_pressed = False
 
         # Wacht 200 milliseconden.
         sleep(0.2)
-
-        # Test
-        print("Einde van de loop.")
-
-        print("Heeft UUID: " + str(reader.heeft_uuid()))
-        print("Huidige UUID: " + reader.huidige_uuid)
-        print("UUID: " + reader.uuid)
 
 # Anders doe dit.
 except KeyboardInterrupt:
