@@ -63,7 +63,8 @@ try:
         if reader.uuid is not huidige_uuid:
             print(reader.uuid)
 
-        huidige_uuid = reader.uuid
+        if reader.heeft_uuid():
+            huidige_uuid = reader.uuid
 
         # Controleer of de schoen is opgepakt.
         if afstandsensor.is_opgepakt() and not afstandsensor.is_fake_opgepakt():
