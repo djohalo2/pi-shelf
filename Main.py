@@ -22,15 +22,15 @@ GPIO.cleanup()
 load_dotenv(find_dotenv())
 
 # Instantieer afstandsensor.
-afstandsensor = Afstandsensor(os.environ.get("DISTANCE_SENSOR_PIN"))
+afstandsensor = Afstandsensor(int(os.environ.get("DISTANCE_SENSOR_PIN")))
 
 # Instantieer knop.
-knop = Button(os.environ.get("BUTTON_PIN"))
+knop = Button(int(os.environ.get("BUTTON_PIN")))
 
 # Instantieer ledjes.
-led_green = Led(os.environ.get("LED_GREEN_PIN"))
-led_yellow = Led(os.environ.get("LED_YELLOW_PIN"))
-led_red = Led(os.environ.get("LED_RED_PIN"))
+led_green = Led(int(os.environ.get("LED_GREEN_PIN")))
+led_yellow = Led(int(os.environ.get("LED_YELLOW_PIN")))
+led_red = Led(int(os.environ.get("LED_RED_PIN")))
 
 # Instantieer reader.
 reader = Reader()
