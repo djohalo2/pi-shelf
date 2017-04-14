@@ -18,7 +18,6 @@ from util.GPIOFuckUp import GPIOFuckUp
 GPIOFuckUp()
 
 # Board mode.
-GPIO.cleanup()
 GPIO.setmode(GPIO.BOARD)
 
 # Instantieer de .env.
