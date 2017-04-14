@@ -23,6 +23,9 @@ class Reader:
         # uuid op de tag.
         self._uuid = ""
 
+        # De huidige UUID.
+        self._huidige_uuid = ""
+
         # Fake gescanned
         self._fake_scanned = False
 
@@ -63,6 +66,24 @@ class Reader:
         :return: fake_pressed als boolean
         """
         return self._fake_scanned
+
+    @property
+    def huidige_uuid(self) -> str:
+        """
+        Getter voor fake_scanned
+
+        :return: fake_pressed als boolean
+        """
+        return self._huidige_uuid
+
+    @huidige_uuid.setter
+    def huidige_uuid(self, value: str) -> None:
+        """
+        Setter voor fake_scanned.
+
+        :param value: True of False
+        """
+        self._huidige_uuid = value
 
     @fake_scanned.setter
     def fake_scanned(self, value: bool) -> None:

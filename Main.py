@@ -49,8 +49,6 @@ state = State()
 # Alle GPIO pinnen worden op false gezet
 GPIOFuckUp()
 
-huidige_uuid = ""
-
 # Probeer het volgende.
 try:
 
@@ -60,11 +58,17 @@ try:
         # Lees de UUID uit.
         reader.read()
 
-        if reader.uuid != huidige_uuid:
+        # Controleer of het UUID niet hetzelfde is.
+        if reader.uuid != reader.huidige_uuid:
+
+            #
             print(reader.uuid)
 
+        # Controleer of de reader een UUID heeft.
         if reader.heeft_uuid():
-            huidige_uuid = reader.uuid
+
+            # Sla de huidige UUID op.
+            reader.huidige_uuid = reader.uuid
 
         # Controleer of de schoen is opgepakt.
         if afstandsensor.is_opgepakt() and not afstandsensor.is_fake_opgepakt():
