@@ -59,8 +59,8 @@ try:
     # Loop dit door zolang het true is.
     while True:
 
-        # Lees de UUID uit.
-        print("Live uitgelezen: " + reader.read())
+        # Lees de reader uit.
+        reader.read()
 
         # Controleer of het UUID niet hetzelfde is.
         if reader.uuid != reader.huidige_uuid:

@@ -29,7 +29,7 @@ class Reader:
         # Fake gescanned
         self._fake_scanned = False
 
-    def read(self) -> str:
+    def read(self) -> bool:
         """
         Lees de RFID scanner uit en sla de waarde op.
         """
@@ -45,8 +45,11 @@ class Reader:
             # Sla de UUID op.
             self._uuid = '-'.join(str(uuid_part) for uuid_part in uuid)
 
-            # Geef de UUID terug.
-            return self._uuid
+            # Geef terug dat het gelukt is.
+            return True
+
+        # Geef terug dat het niet gelukt is.
+        return False
 
     def is_fake_scanned(self) -> bool:
         return self.fake_scanned
