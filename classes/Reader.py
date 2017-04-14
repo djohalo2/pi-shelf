@@ -56,7 +56,7 @@ class Reader:
         Geeft terug of de waarde van de uuid leeg is of niet.
         :return: Boolean op basis van bovenstaande vraag.
         """
-        return not self._uuid == ""
+        return not self._huidige_uuid == ""
 
     @property
     def fake_scanned(self) -> bool:
