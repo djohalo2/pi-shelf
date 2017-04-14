@@ -1,12 +1,24 @@
 from uuid import getnode as get_mac
 import requests
 
+
 class Shelf:
+    """
+    
+    """
 
-    BASE_URL = "https://ipmedt5.roddeltrein.nl/api"
+    def __init__(self, base_url: str, private_key: str) -> None:
+        """
+        
+        :param base_url: 
+        :param private_key: 
+        """
+        self._base_url = base_url
+        self._private_key = private_key
 
-    def __init__(self):
         self._token = ""
+        self._mac_address = ""
+
         self.set_mac_address()
         self.connect()
         self.authenticate()
@@ -16,9 +28,10 @@ class Shelf:
         Connect call om de shelf te connecten aan de backend
         :return: True of False op basis van status code van de request
         """
-        r = requests.post(self.BASE_URL + "/shelves/" + self.get_mac_address() + "/connect",
-                          data={'private_key': 'secret'})
-        if (r.status_code == 200):
+        r = requests.post(
+            self._base_url + "/shelves/" + self.get_mac_address() + "/connect",
+            data={'private_key': self._private_key})
+        if r.status_code == 200:
             return True
         else:
             return False
@@ -29,9 +42,10 @@ class Shelf:
         :return: Bij succesvol authenticatie geef token terug, anders False
         """
 
-        r = requests.post(self.BASE_URL + "/authenticate/shelf",
-                          data={'mac_address': self.get_mac_address(), 'private_key': 'secret'})
-        if(r.status_code == 200):
+        r = requests.post(self._base_url + "/authenticate/shelf",
+                          data={'mac_address': self.get_mac_address(),
+                                'private_key': self._private_key})
+        if r.status_code == 200:
             response = r.json()
             self._token = response['token']
         else:
@@ -49,10 +63,9 @@ class Shelf:
         :return: True of False op basis van status code van de request
         """
 
-        r = requests.post(self.BASE_URL + "/authenticate/shelf/check",
+        r = requests.post(self._base_url + "/authenticate/shelf/check",
                           headers=self.get_headers())
-        print(r.text)
-        if(r.status_code == 200):
+        if r.status_code == 200:
             return True
         else:
             return False
@@ -63,10 +76,11 @@ class Shelf:
         :return: True of False op basis van status code van de request
         """
 
-        r = requests.post(self.BASE_URL + "/shelves/" + self.get_mac_address() + "/actions/picked_up",
-                          headers=self.get_headers())
+        r = requests.post(
+            self._base_url + "/shelves/" + self.get_mac_address() + "/actions/picked_up",
+            headers=self.get_headers())
 
-        if(r.status_code == 200):
+        if r.status_code == 200:
             return True
         else:
             return False
@@ -78,10 +92,10 @@ class Shelf:
         """
 
         r = requests.post(
-            self.BASE_URL + "/shelves/" + self.get_mac_address + "/tags/" + uuid_tag + "/actions/maat_gescanned",
-                          headers=self.get_headers())
+            self._base_url + "/shelves/" + self.get_mac_address() + "/tags/" + uuid_tag + "/actions/maat_gescanned",
+            headers=self.get_headers())
 
-        if (r.status_code == 200):
+        if r.status_code == 200:
             return r.json()
         else:
             return False
@@ -92,10 +106,11 @@ class Shelf:
         :return: True of False op basis van status code van de request
         """
 
-        r = requests.post(self.BASE_URL + "/shelves/" + self.get_mac_address() + "/tags/" + uuid_tag +
-                          "/actions/knop_ingedrukt", headers=self.get_headers())
+        r = requests.post(
+            self._base_url + "/shelves/" + self.get_mac_address() + "/tags/" + uuid_tag +
+            "/actions/knop_ingedrukt", headers=self.get_headers())
 
-        if (r.status_code == 200):
+        if r.status_code == 200:
             return True
         else:
             return False
@@ -106,10 +121,11 @@ class Shelf:
         :return: Geeft demo model informatie terug indien succesvol, anders False
         """
 
-        r = requests.get(self.BASE_URL + "/shelves/" + self.get_mac_address(),
-                          headers=self.get_headers())
+        r = requests.get(
+            self._base_url + "/shelves/" + self.get_mac_address(),
+            headers=self.get_headers())
 
-        if (r.status_code == 200):
+        if r.status_code == 200:
             return r.json()
         else:
             return False
@@ -120,10 +136,10 @@ class Shelf:
         :return: Geeft demo model informatie terug indien succesvol, anders False
         """
 
-        r = requests.get(self.BASE_URL + "/settings/kan_koppelen",
+        r = requests.get(self._base_url + "/settings/kan_koppelen",
                          headers=self.get_headers())
 
-        if (r.status_code == 200):
+        if r.status_code == 200:
             return r.json()["data"]["value"]
         else:
             return False
@@ -133,7 +149,9 @@ class Shelf:
         Zet het mac_address van de shelf op basis van het mac_address van de Pi
         """
         mac_dec = get_mac()
-        self._mac_address = "".join(c + ":" if i % 2 else c for i, c in enumerate(hex(mac_dec)[2:].zfill(12)))[:-1]
+        self._mac_address = "".join(c + ":" if i % 2 else c for i, c in
+                                    enumerate(hex(mac_dec)[2:].zfill(12)))[
+                            :-1]
 
     def get_mac_address(self):
         """
@@ -142,8 +160,9 @@ class Shelf:
         """
         return self._mac_address
 
+
 def main():
-    shelf = Shelf()
+    shelf = Shelf("http://localhost:8000/api/", 'changeme')
 
     print(shelf.authenticate_check())
     print(shelf.schoen_opgepakt())
