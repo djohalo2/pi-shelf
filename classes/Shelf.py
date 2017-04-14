@@ -32,7 +32,7 @@ class Shelf:
 
                 if size.get('eu_size') == response_api['data']['tag']['size']['eu_size']:
 
-                    self._led_green.zet_aat()
+                    self._led_green.zet_aan()
                     break
 
                 else:
