@@ -153,9 +153,6 @@ class API:
 
         r = requests.get(self._base_url + "/settings/kan_koppelen",
                          headers=self.get_headers())
-
-        print(r.json())
-
         if r.status_code == 200:
             return r.json()["data"]["value"]
         else:

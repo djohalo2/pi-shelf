@@ -23,6 +23,9 @@ class Shelf:
         self._led_yellow.zet_uit()
         self._led_green.zet_uit()
 
+        # Print alles
+        print(response_api)
+
         # Als er geen maten zijn.
         if not response_api['data']['sizes']:
 
