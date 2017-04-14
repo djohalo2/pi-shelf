@@ -24,11 +24,16 @@ class Shelf:
         self._led_green.zet_uit()
 
         # Print alles
-        print(response_api)
+        if response_api['data']['sizes']:
+
+            for size in response_api['data']['sizes']:
+
+                print(size)
 
         # Als er geen maten zijn.
-        if not response_api['data']['sizes']:
+        else:
 
+            # Ledje wordt rood.
             self._led_red.zet_aan()
 
 
