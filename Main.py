@@ -107,18 +107,20 @@ try:
         # Controleer of de knop ingedrukt wordt.
         if button.is_pressed() and not button.is_fake_pressed():
 
-            # Knop is ingedrukt.
-            print("Knop is nu ingedrukt.")
-
-            print(reader.huidige_uuid)
-
             # Controleer of de reader een uuid.
             if reader.heeft_uuid():
 
-                print("Shelf heeft een UUID.")
-
                 # Doe API call.
                 API.knop_ingedrukt(reader.uuid)
+
+            # Zet het fake indrukken op true.
+            button.fake_pressed = True
+
+        # Controleer of de knop losgelaten is en fake ingedrukt is.
+        if not button.is_pressed() and button.is_fake_pressed():
+
+            if not reader.huidige_uuid:
+                button.fake_pressed = False
 
         # Wacht 200 milliseconden.
         sleep(0.2)
