@@ -128,6 +128,10 @@ try:
         # Test
         print("Einde van de loop.")
 
+        print("Heeft UUID: " + str(reader.heeft_uuid()))
+        print("Huidige UUID: " + reader.huidige_uuid)
+        print("UUID: " + reader.uuid)
+
 # Anders doe dit.
 except KeyboardInterrupt:
 
