@@ -60,7 +60,7 @@ try:
     while True:
 
         # Lees de UUID uit.
-        reader.read()
+        print("Live uitgelezen: " + reader.read())
 
         # Controleer of het UUID niet hetzelfde is.
         if reader.uuid != reader.huidige_uuid:
@@ -82,9 +82,6 @@ try:
 
                 # Geef aan dat er een nieuwe demo gescanned is.
                 demo = API.demo_gescanned(reader.uuid)
-
-        # Controleer of de reader een UUID heeft.
-        # if reader.heeft_uuid():
 
         # Sla de huidige UUID op.
         reader.huidige_uuid = reader.uuid
