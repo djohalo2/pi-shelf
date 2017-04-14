@@ -61,6 +61,8 @@ try:
         # Controleer of het UUID niet hetzelfde is.
         if reader.uuid != reader.huidige_uuid:
 
+            print("Reader heeft nieuwe UUID")
+
             # Als het een maat tag is.
             if not shelf.kan_koppelen():
 
