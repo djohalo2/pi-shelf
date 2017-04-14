@@ -28,7 +28,7 @@ load_dotenv(find_dotenv())
 afstandsensor = Afstandsensor(int(os.environ.get("DISTANCE_SENSOR_PIN")))
 
 # Instantieer knop.
-knop = Button(int(os.environ.get("BUTTON_PIN")))
+button = Button(int(os.environ.get("BUTTON_PIN")))
 
 # Instantieer ledjes.
 led_green = Led(int(os.environ.get("LED_GREEN_PIN")))
@@ -103,6 +103,16 @@ try:
 
             # Zet het fake oppakken weer op false.
             afstandsensor.fake_opgepakt = False
+
+        # Controleer of de knop ingedrukt wordt.
+        if button.is_pressed() and not button.is_fake_pressed():
+
+            # Controleer of de reader een uuid.
+            if reader.heeft_uuid():
+
+                # Doe API call.
+                API.knop_ingedrukt(reader.uuid)
+
 
         # Wacht 200 milliseconden.
         sleep(0.2)
