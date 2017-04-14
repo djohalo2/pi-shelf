@@ -110,6 +110,8 @@ try:
             # Knop is ingedrukt.
             print("Knop is nu ingedrukt.")
 
+            print(reader.huidige_uuid)
+
             # Controleer of de reader een uuid.
             if reader.heeft_uuid():
 
