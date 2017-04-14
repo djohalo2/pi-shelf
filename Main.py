@@ -120,7 +120,6 @@ try:
                 # Doe API call.
                 API.knop_ingedrukt(reader.uuid)
 
-
         # Wacht 200 milliseconden.
         sleep(0.2)
 
