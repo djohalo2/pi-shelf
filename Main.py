@@ -60,7 +60,7 @@ try:
         # Lees de UUID uit.
         reader.read()
 
-        if reader.uuid is not huidige_uuid:
+        if reader.uuid != huidige_uuid:
             print(reader.uuid)
 
         if reader.heeft_uuid():
