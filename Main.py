@@ -84,10 +84,10 @@ try:
                 demo = API.demo_gescanned(reader.uuid)
 
         # Controleer of de reader een UUID heeft.
-        if reader.heeft_uuid():
+        # if reader.heeft_uuid():
 
-            # Sla de huidige UUID op.
-            reader.huidige_uuid = reader.uuid
+        # Sla de huidige UUID op.
+        reader.huidige_uuid = reader.uuid
 
         # Controleer of de schoen is opgepakt.
         if afstandsensor.is_opgepakt() and not afstandsensor.is_fake_opgepakt():
