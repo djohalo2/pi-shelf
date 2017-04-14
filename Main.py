@@ -62,6 +62,12 @@ try:
         # Lees de reader uit.
         reader.read()
 
+        # Controleer of de knop losgelaten is en fake ingedrukt is.
+        if not button.is_pressed() and button.is_fake_pressed():
+
+            if reader.read():
+                button.fake_pressed = False
+
         # Controleer of het UUID niet hetzelfde is.
         if reader.uuid != reader.huidige_uuid:
 
@@ -113,11 +119,6 @@ try:
             # Zet het fake indrukken op true.
             button.fake_pressed = True
 
-        # Controleer of de knop losgelaten is en fake ingedrukt is.
-        if not button.is_pressed() and button.is_fake_pressed():
-
-            if reader.read():
-                button.fake_pressed = False
 
         # Wacht 200 milliseconden.
         sleep(0.2)
