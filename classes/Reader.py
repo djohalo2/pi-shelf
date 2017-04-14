@@ -45,6 +45,9 @@ class Reader:
             # Geef de UUID terug.
             return self._uuid
 
+    def is_fake_scanned(self) -> bool:
+        return self.fake_scanned
+
     def heeft_uuid(self) -> bool:
         """
         Geeft terug of de waarde van de uuid leeg is of niet.

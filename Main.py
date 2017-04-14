@@ -55,8 +55,13 @@ try:
     # Loop dit door zolang het true is.
     while True:
 
-        # Lees de RFID scanner uit.
-        if reader.uuid is not reader.read():
+        if not reader.heeft_uuid() and not reader.is_fake_scanned():
+
+            reader.fake_scanned = True
+
+            reader.read()
+
+        if reader.heeft_uuid() and reader.is_fake_scanned():
             print(reader.uuid)
 
         # Controleer of de schoen is opgepakt.
@@ -76,6 +81,9 @@ try:
 
         # Wacht 200 milliseconden.
         sleep(0.2)
+
+        # Test
+        print("Einde van de loop.")
 
 # Anders doe dit.
 except KeyboardInterrupt:
