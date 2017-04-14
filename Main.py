@@ -107,6 +107,9 @@ try:
         # Controleer of de knop ingedrukt wordt.
         if button.is_pressed() and not button.is_fake_pressed():
 
+            # Knop is ingedrukt.
+            print("Knop is nu ingedrukt.")
+
             # Controleer of de reader een uuid.
             if reader.heeft_uuid():
 
