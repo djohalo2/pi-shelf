@@ -71,8 +71,11 @@ try:
                 # Geef aan dat de maat gescanned is.
                 maten = API.maat_gescanned(reader.uuid)
 
-                # Handel de ledjes af.
-                shelf.bepaal_ledjes(maten)
+                # Kijken of het request goed verlopen is.
+                if not type(maten) is bool:
+
+                    # Handel de ledjes af.
+                    shelf.bepaal_ledjes(maten)
 
             # Er gaat een nieuwe schoen gekoppelt worden
             if API.kan_koppelen():
