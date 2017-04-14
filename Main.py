@@ -9,7 +9,7 @@ from classes.Button import Button
 from classes.Led import Led
 from classes.Reader import Reader
 from classes.Scherm import Scherm
-from classes.Shelf import Shelf
+from classes.API import API
 from classes.State import State
 
 from util.GPIOFuckUp import GPIOFuckUp
@@ -40,8 +40,8 @@ reader = Reader()
 # Instantieer display.
 display = Scherm()
 
-# Instantieer shelf.
-shelf = Shelf(os.environ.get("BASE_URL"), os.environ.get("PRIVATE_KEY"))
+# Instantieer API.
+API = API(os.environ.get("BASE_URL"), os.environ.get("PRIVATE_KEY"))
 
 # Instantieer states.
 state = State()
@@ -62,18 +62,18 @@ try:
         if reader.uuid != reader.huidige_uuid:
 
             # Als het een maat tag is.
-            if not shelf.kan_koppelen():
+            if not API.kan_koppelen():
 
                 # Geef aan dat de maat gescanned is.
-                maten = shelf.maat_gescanned(reader.uuid)
+                maten = API.maat_gescanned(reader.uuid)
 
                 print(maten)
 
             # Er gaat een nieuwe schoen gekoppelt worden
-            if shelf.kan_koppelen():
+            if API.kan_koppelen():
 
                 # Geef aan dat er een nieuwe demo gescanned is.
-                demo = shelf.demo_gescanned(reader.uuid)
+                demo = API.demo_gescanned(reader.uuid)
 
         # Controleer of de reader een UUID heeft.
         if reader.heeft_uuid():
@@ -88,7 +88,7 @@ try:
             afstandsensor.fake_opgepakt = True
 
             # Doe een API call.
-            shelf.schoen_opgepakt()
+            API.schoen_opgepakt()
 
         # Reset het oppakken.
         if not afstandsensor.is_opgepakt() and afstandsensor.is_fake_opgepakt():

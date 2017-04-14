@@ -2,7 +2,7 @@ from uuid import getnode as get_mac
 import requests
 
 
-class Shelf:
+class API:
     """
     
     """
