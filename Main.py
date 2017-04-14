@@ -47,11 +47,31 @@ state = State()
 # Alle GPIO pinnen worden op false gezet
 GPIOFuckUp()
 
+# Probeer het volgende.
 try:
 
-    # Wacht 200 milliseconden.
-    sleep(0.2)
+    # Loop dit door zolang het true is.
+    while True:
 
+        # Controleer of de schoen is opgepakt.
+        if afstandsensor.is_opgepakt() and not afstandsensor.is_fake_opgepakt():
+
+            # Zet het fake oppakken op true.
+            afstandsensor.fake_opgepakt = True
+
+            # Doe een API call.
+            shelf.schoen_opgepakt()
+
+        # Reset het oppakken.
+        if not afstandsensor.is_opgepakt() and afstandsensor.is_fake_opgepakt():
+
+            # Zet het fake oppakken weer op false.
+            afstandsensor.fake_opgepakt = False
+
+        # Wacht 200 milliseconden.
+        sleep(0.2)
+
+# Anders doe dit.
 except KeyboardInterrupt:
 
     # GPIO cleanup
