@@ -64,6 +64,8 @@ try:
             # Als het een maat tag is.
             if not shelf.kan_koppelen():
 
+                print("Maat gescanned")
+
                 # Geef aan dat de maat gescanned is.
                 maten = shelf.maat_gescanned(reader.uuid)
 
@@ -71,6 +73,8 @@ try:
 
             # Er gaat een nieuwe schoen gekoppelt worden
             if shelf.kan_koppelen():
+
+                print("Demo gescanned")
 
                 # Geef aan dat er een nieuwe demo gescanned is.
                 demo = shelf.demo_gescanned(reader.uuid)
