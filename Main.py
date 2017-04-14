@@ -55,6 +55,9 @@ try:
     # Loop dit door zolang het true is.
     while True:
 
+        # Lees de RFID scanner uit.
+        reader.read()
+
         # Controleer of de schoen is opgepakt.
         if afstandsensor.is_opgepakt() and not afstandsensor.is_fake_opgepakt():
 
@@ -69,6 +72,9 @@ try:
 
             # Zet het fake oppakken weer op false.
             afstandsensor.fake_opgepakt = False
+
+        # Print het UUID voor het testen.
+        print(reader.uuid)
 
         # Wacht 200 milliseconden.
         sleep(0.2)
