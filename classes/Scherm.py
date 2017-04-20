@@ -39,6 +39,11 @@ class Scherm:
         """
         self.lcd_init()
 
+        # uuid op de tag.
+        self._is_idle = True
+
+        self._demo_info = []
+
     def lcd_init(self):
         """
         Initialiseren van lcd scherm
@@ -88,6 +93,17 @@ class Scherm:
 
         for i in range(self.LCD_WIDTH):
             self.lcd_byte(ord(message[i]), self.LCD_CHR)
+
+    def is_idle(self) -> bool:
+        """
+        Geeft terug of de waarde van de uuid leeg is of niet.
+        :return: Boolean op basis van bovenstaande vraag.
+        """
+        return self._is_idle
+
+    def set_is_idle(self, value):
+        self._is_idle = value
+
 
     def thread_is_alive(self):
         """

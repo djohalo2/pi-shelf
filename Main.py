@@ -41,6 +41,7 @@ reader = Reader()
 # Instantieer display.
 display = Scherm()
 
+
 # Instantieer API.
 API = API(os.environ.get("BASE_URL"), os.environ.get("PRIVATE_KEY"))
 
@@ -53,12 +54,18 @@ state = State()
 # Alle GPIO pinnen worden op false gezet
 GPIOFuckUp()
 
+tekst_boven = API.get_shelf_information()["data"]["demo"]["product"]["shoe"]["name"]
+tekst_onder = API.get_shelf_information()["data"]["demo"]["product"]["shoe"]["price"]
+
 # Probeer het volgende.
 try:
 
     # Loop dit door zolang het true is.
     while True:
 
+        # Controleer of de display idle is
+        if display.is_idle():
+            display.set_information(tekst_boven, tekst_onder)
         # Lees de reader uit.
         reader.read()
 
@@ -71,6 +78,17 @@ try:
                 # Geef aan dat de maat gescanned is.
                 maten = API.maat_gescanned(reader.uuid)
 
+                #Haal maten op en zet in variabele
+                display_maten = "Maten: "
+                for size in maten["data"]["sizes"]:
+                    display_maten += size.get('eu_size')[:2] + " "
+
+                #Haal display van de idle staat af
+                display.set_is_idle(False)
+
+                #Toon gevonden maten op de display
+                display.set_information(tekst_boven, display_maten)
+                
                 # Kijken of het request goed verlopen is.
                 if not type(maten) is bool:
 
