@@ -1,6 +1,7 @@
 from dotenv import load_dotenv, find_dotenv
 import os
 import RPi.GPIO as GPIO
+from multiprocessing import Process
 
 from time import sleep
 
@@ -9,7 +10,7 @@ from classes.API import API
 from classes.Button import Button
 from classes.Led import Led
 from classes.Reader import Reader
-from classes.Scherm import Scherm
+from classes.Screen import Screen
 from classes.Shelf import Shelf
 from classes.State import State
 
@@ -39,7 +40,7 @@ led_red = Led(int(os.environ.get("LED_RED_PIN")))
 reader = Reader()
 
 # Instantieer display.
-display = Scherm()
+display = Screen()
 
 
 # Instantieer API.
@@ -64,14 +65,20 @@ try:
     while True:
 
         # Controleer of de display idle is
-        if display.is_idle():
-            display.set_information(tekst_boven, tekst_onder)
+        # if display.is_idle and not display._is_fake_idle:
+        #     display.set_information(tekst_boven, tekst_onder)
+        #     display._is_fake_idle = True
+
         # Lees de reader uit.
         reader.read()
+        print(reader.uuid)
+
+        # display.set_is_idle(True)
+        # display._is_fake_idle = False
 
         # Controleer of het UUID niet hetzelfde is.
         if reader.uuid != reader.huidige_uuid:
-
+            print("Gelezen")
             # Als het een maat tag is.
             if not API.kan_koppelen():
 
@@ -84,11 +91,17 @@ try:
                     display_maten += size.get('eu_size')[:2] + " "
 
                 #Haal display van de idle staat af
-                display.set_is_idle(False)
 
-                #Toon gevonden maten op de display
-                display.set_information(tekst_boven, display_maten)
-                
+
+                # #Toon gevonden maten op de display
+                # try:
+                #     if display_process.is_alive():
+                #         display.set_is_idle(False)
+                #         display_process.terminate()
+                #         display_process = display.information_in_process(tekst_boven, display_maten)
+                # except:
+                #     display.set_is_idle(False)
+                #     display_process = display.information_in_process(tekst_boven, display_maten)
                 # Kijken of het request goed verlopen is.
                 if not type(maten) is bool:
 
