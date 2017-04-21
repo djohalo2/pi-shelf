@@ -95,7 +95,8 @@ try:
                     display.information_process.terminate()
 
                 # Toon de informatie op het scherm.
-                display.information_in_process(shelf.tekst_boven, shelf.get_maten(maten))
+                display.information_in_process(shelf.tekst_boven,
+                                               shelf.get_maten(maten))
 
                 # Zet de idle terug naar false.
                 display.fake_idle = False
@@ -122,7 +123,8 @@ try:
         reader.huidige_uuid = reader.uuid
 
         # Controleer of de schoen is opgepakt.
-        if afstandsensor.is_opgepakt() and not afstandsensor.is_fake_opgepakt():
+        if afstandsensor.is_opgepakt() and \
+                not afstandsensor.is_fake_opgepakt():
 
             # Zet het fake oppakken op true.
             afstandsensor.fake_opgepakt = True
@@ -131,7 +133,8 @@ try:
             API.schoen_opgepakt()
 
         # Reset het oppakken.
-        if not afstandsensor.is_opgepakt() and afstandsensor.is_fake_opgepakt():
+        if not afstandsensor.is_opgepakt() and \
+                afstandsensor.is_fake_opgepakt():
 
             # Zet het fake oppakken weer op false.
             afstandsensor.fake_opgepakt = False

@@ -1,7 +1,8 @@
-from time import sleep
-
 import RPi.GPIO as GPIO
+
+from time import sleep
 from multiprocessing import Process
+
 
 
 class Button:
@@ -61,16 +62,14 @@ class Button:
 
     def start_process(self) -> None:
         """
-        
-        :return: 
+        Start een timeout van 10 seconden in een thread.
         """
         self._button_process = Process(target=self.timeout)
         self._button_process.start()
 
     def timeout(self) -> None:
         """
-        
-        :return: 
+        Start een timeout van 10 seconden.
         """
         sleep(10)
 

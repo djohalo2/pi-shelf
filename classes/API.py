@@ -1,5 +1,6 @@
-from uuid import getnode as get_mac
 import requests
+
+from uuid import getnode as get_mac
 
 
 class API:
@@ -23,7 +24,7 @@ class API:
         self.connect()
         self.authenticate()
 
-    def connect(self):
+    def connect(self) -> bool:
         """
         Connect call om de shelf te connecten aan de backend
         :return: True of False op basis van status code van de request
@@ -36,7 +37,7 @@ class API:
         else:
             return False
 
-    def authenticate(self):
+    def authenticate(self) -> bool or object:
         """
         Authenticeer de shelf met inloggegevens om een token te ontvangen
         :return: Bij succesvol authenticatie geef token terug, anders False
@@ -51,13 +52,13 @@ class API:
         else:
             return False
 
-    def get_token(self):
+    def get_token(self) -> str:
         return self._token
 
-    def get_headers(self):
+    def get_headers(self) -> object:
         return {'Authorization': 'Bearer ' + self.get_token()}
 
-    def authenticate_check(self):
+    def authenticate_check(self) -> bool:
         """
         Controleer of token nog geldig is 
         :return: True of False op basis van status code van de request
@@ -70,7 +71,7 @@ class API:
         else:
             return False
 
-    def schoen_opgepakt(self):
+    def schoen_opgepakt(self) -> bool:
         """
         Post call als de schoen is opgepakt
         :return: True of False op basis van status code van de request
@@ -85,7 +86,7 @@ class API:
         else:
             return False
 
-    def maat_gescanned(self, uuid_tag):
+    def maat_gescanned(self, uuid_tag) -> bool or object:
         """
         Post call als een maat wordt gescanned
         :return: Geeft beschikbare maten terug indien succesvol, anders False
@@ -100,7 +101,7 @@ class API:
         else:
             return False
 
-    def demo_gescanned(self, uuid_tag):
+    def demo_gescanned(self, uuid_tag) -> bool or object:
         """
         Post call als een maat wordt gescanned
         :return: Geeft beschikbare maten terug indien succesvol, anders False
@@ -115,7 +116,7 @@ class API:
         else:
             return False
 
-    def knop_ingedrukt(self, uuid_tag):
+    def knop_ingedrukt(self, uuid_tag) -> bool:
         """
         Post call als de knop is ingedrukt
         :return: True of False op basis van status code van de request
@@ -132,7 +133,7 @@ class API:
         else:
             return False
 
-    def get_shelf_information(self):
+    def get_shelf_information(self) -> bool or object:
         """
         Vraag shelf informatie op 
         :return: Geeft demo model informatie terug indien succesvol, anders False
@@ -147,7 +148,7 @@ class API:
         else:
             return False
 
-    def kan_koppelen(self):
+    def kan_koppelen(self) -> bool:
         """
         Vraag shelf informatie op 
         :return: Geeft demo model informatie terug indien succesvol, anders False
@@ -156,11 +157,11 @@ class API:
         r = requests.get(self._base_url + "/settings/kan_koppelen",
                          headers=self.get_headers())
         if r.status_code == 200:
-            return r.json()["data"]["value"]
+            return bool(r.json()["data"]["value"])
         else:
             return False
 
-    def set_mac_address(self):
+    def set_mac_address(self) -> None:
         """
         Zet het mac_address van de shelf op basis van het mac_address van de Pi
         """
@@ -169,7 +170,7 @@ class API:
                                     enumerate(hex(mac_dec)[2:].zfill(12)))[
                             :-1]
 
-    def get_mac_address(self):
+    def get_mac_address(self) -> str:
         """
         Getter voor mac_address
         :return: Geef het mac_address terug 
@@ -177,7 +178,7 @@ class API:
         return self._mac_address
 
 
-def main():
+def main() -> None:
     api = API("http://localhost:8000/api/", 'changeme')
 
     print(api.authenticate_check())

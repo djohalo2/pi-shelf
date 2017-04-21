@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+
 from pirc522 import RFID
 
 
@@ -29,8 +30,71 @@ class Reader:
         # Laatste UUID.
         self._laatste_uuid = ""
 
-        # Fake gescanned
+        # Fake gescanned.
         self._fake_scanned = False
+
+    @property
+    def fake_scanned(self) -> bool:
+        """
+        Getter voor fake_scanned
+
+        :return: fake_pressed als boolean
+        """
+        return self._fake_scanned
+
+    @fake_scanned.setter
+    def fake_scanned(self, value: bool) -> None:
+        """
+        Setter voor fake_scanned.
+
+        :param value: True of False
+        """
+        self._fake_scanned = value
+
+    @property
+    def huidige_uuid(self) -> str:
+        """
+        Getter voor huidige_uuid
+
+        :return: huidige_uuid als boolean
+        """
+        return self._huidige_uuid
+
+    @huidige_uuid.setter
+    def huidige_uuid(self, value: str) -> None:
+        """
+        Setter voor huidige_uuid.
+
+        :param value: True of False
+        """
+        self._huidige_uuid = value
+
+    @property
+    def uuid(self) -> str:
+        """
+        Getter voor de uuid.
+
+        :return: De uuid op de tag als string.
+        """
+        return self._uuid
+
+    @uuid.setter
+    def uuid(self, value: str) -> None:
+        """
+        Setter voor uuid.
+
+        :param value: True of False
+        """
+        self._uuid = value
+
+    @property
+    def laatste_uuid(self) -> str:
+        """
+        Getter voor de laatste uuid.
+
+        :return: De uuid op de tag als string.
+        """
+        return self._laatste_uuid
 
     def read(self) -> bool:
         """
@@ -45,9 +109,14 @@ class Reader:
         # Controleer of het goed gaat.
         if not error:
 
+            # Formatteer de UUID.
+            transformed = '-'.join(str(uuid_part) for uuid_part in uuid)
+
             # Sla de UUID op.
-            self._uuid = '-'.join(str(uuid_part) for uuid_part in uuid)
-            self._laatste_uuid = self._uuid
+            self._uuid = transformed
+
+            # Sla de laatste uuid op.
+            self._laatste_uuid = transformed
 
             # Geef terug dat het gelukt is.
             return True
@@ -56,85 +125,27 @@ class Reader:
         return False
 
     def is_fake_scanned(self) -> bool:
+        """
+        Geef terug of er fake gescanned is.
+        
+        :return: Boolean op basis van fake gescanned.
+        """
         return self.fake_scanned
 
     def heeft_uuid(self) -> bool:
         """
         Geeft terug of de waarde van de uuid leeg is of niet.
+        
         :return: Boolean op basis van bovenstaande vraag.
         """
         return not self._laatste_uuid == ""
 
     def reset(self) -> None:
         """
-        
-        :return: 
+        Reset uuid en huidige uuid naar een lege string.
         """
         self.uuid = ""
         self.huidige_uuid = ""
-
-    @property
-    def fake_scanned(self) -> bool:
-        """
-        Getter voor fake_scanned
-
-        :return: fake_pressed als boolean
-        """
-        return self._fake_scanned
-
-    @property
-    def huidige_uuid(self) -> str:
-        """
-        Getter voor fake_scanned
-
-        :return: fake_pressed als boolean
-        """
-        return self._huidige_uuid
-
-    @huidige_uuid.setter
-    def huidige_uuid(self, value: str) -> None:
-        """
-        Setter voor fake_scanned.
-
-        :param value: True of False
-        """
-        self._huidige_uuid = value
-
-    @fake_scanned.setter
-    def fake_scanned(self, value: bool) -> None:
-        """
-        Setter voor fake_scanned.
-
-        :param value: True of False
-        """
-        self._fake_scanned = value
-
-    @property
-    def uuid(self) -> str:
-        """
-        Getter voor de uuid.
-
-        :return: De uuid op de tag als string.
-        """
-        return self._uuid
-
-    @uuid.setter
-    def uuid(self, value: str) -> None:
-        """
-        Setter voor fake_scanned.
-
-        :param value: True of False
-        """
-        self._uuid = value
-
-    @property
-    def laatste_uuid(self) -> str:
-        """
-        Getter voor de laatste uuid.
-
-        :return: De uuid op de tag als string.
-        """
-        return self._laatste_uuid
 
 
 def main() -> None:

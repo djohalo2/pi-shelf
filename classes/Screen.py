@@ -63,51 +63,60 @@ class Screen:
         except Exception as e:
             return False
 
-    def information_in_process(self, tekst_boven, tekst_onder):
+    def information_in_process(self, tekst_boven, tekst_onder) -> None:
         """
-        Voer de set_information functie uit in een aparte thread zodat er andere
-        code tegelijkertijd gedraaid kan worden
+        Voer de set_information functie uit in een aparte thread 
+        zodat er andere code tegelijkertijd gedraaid kan worden
+        
         :param tekst_boven: De tekst voor de bovenste regel van de display 
-                        als string
+                            als string
         :param tekst_onder: De tekst voor de bovenste regel van de display
-                        als string
+                            als string
         """
         self._information_process = Process(target=self.set_information,
                                        args=(tekst_boven, tekst_onder, True))
         self._information_process.start()
 
-    def set_information(self, tekst_boven, tekst_onder, need_timeout=False):
+    def set_information(self, tekst_boven, tekst_onder, need_timeout=False)\
+            -> None:
         """
-        Zet de teksten die op de boven en onder regel van de display getoond moeten worden
-        :param need_timeout: 
-        :param tekst_boven: De tekst voor de bovenste regel van de display 
-                        als string
-        :param tekst_onder: De tekst voor de bovenste regel van de display
-                        als string
+        Zet de teksten die op de boven en onder regel van de display 
+        getoond moeten worden
+        
+        :param tekst_boven:  De tekst voor de bovenste regel van de display 
+                             als string
+        :param tekst_onder:  De tekst voor de bovenste regel van de display
+                             als string
+        :param need_timeout: Of er een timeout nodig is als boolean.
         """
+        # Leeg het display.
         self.lcd.clear()
+
+        # Schrijf de informatie naar het scherm.
         self.lcd.write_string(tekst_boven)
         self.lcd.write_string('\r\n')
         self.lcd.write_string(tekst_onder)
 
+        # Kijk of er een timeout nodig is.
         if need_timeout:
-            print("Going to sleep")
+
+            # Slaap voor 3 seconden.
             sleep(3)
-            print("Done sleeping")
 
     @property
     def fake_idle(self) -> bool:
         """
-        Getter voor fake_pressed
+        Getter voor fake_idle
 
-        :return: fake_pressed als boolean
+        :return: fake_idle als boolean
         """
         return self._fake_idle
 
     @fake_idle.setter
     def fake_idle(self, value: bool) -> None:
         """
-        Setter voor fake_pressed.
+        Setter voor fake_idle.
+        
         :param value: True of False
         """
         self._fake_idle = value
@@ -115,30 +124,34 @@ class Screen:
     @property
     def information_process(self) -> Process:
         """
-        Getter voor fake_pressed
+        Getter voor information_process
 
         :return: fake_pressed als boolean
         """
         return self._information_process
 
     @information_process.setter
-    def information_process(self, value) -> None:
+    def information_process(self, value: Process) -> None:
         """
-        Setter voor fake_pressed.
-        :param value: True of False
+        Setter voor information_process.
+        
+        :param value: Process
         """
         self._information_process = value
 
 
-def main():
+def main() -> None:
+    """
+    
+    :return: 
+    """
+    # Definieer een nieuw scherm.
     screen = Screen()
-    try:
-        screen.show_sizes()
-    except KeyboardInterrupt:
-        screen.lcd.clear()
+
+    # Schrijf informatie op het scherm.
+    screen.set_information("Hallo", "wereld")
 
 
 # Clearing the display
 if __name__ == '__main__':
     main()
-

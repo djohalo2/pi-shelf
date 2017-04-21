@@ -16,6 +16,8 @@ class Afstandsensor:
         """
         # Instansieer de afstand sensor pin.
         self._afstandsensor_input_pin = input_pin
+
+        # Doe de GPIO setup.
         GPIO.setup(self._afstandsensor_input_pin, GPIO.IN,
                    pull_up_down=GPIO.PUD_UP)
 
