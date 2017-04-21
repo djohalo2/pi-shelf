@@ -1,9 +1,9 @@
-from dotenv import load_dotenv, find_dotenv
 import os
 import RPi.GPIO as GPIO
-from multiprocessing import Process
 
+from dotenv import load_dotenv, find_dotenv
 from time import sleep
+
 
 from classes.Afstandsensor import Afstandsensor
 from classes.API import API

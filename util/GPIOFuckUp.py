@@ -2,12 +2,17 @@ import RPi.GPIO as GPIO
 
 
 class GPIOFuckUp:
+    """
+    GPIO Fuck Up klasse.
+    """
 
     # noinspection PyBroadException
-    def __init__(self):
-
+    def __init__(self) -> None:
+        """
+        Zet elke pin op de Raspberry Pi op false.
+        """
         # Elke GPIO pin
-        self._pins = [ 7, 11, 12,
+        self._pins = [7, 11, 12,
                       13, 15, 16,
                       18, 22, 29,
                       31, 32, 33,
