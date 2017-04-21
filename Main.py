@@ -55,8 +55,8 @@ state = State()
 # Alle GPIO pinnen worden op false gezet
 GPIOFuckUp()
 
-tekst_boven = API.get_shelf_information()["data"]["demo"]["product"]["shoe"]["name"]
-tekst_onder = API.get_shelf_information()["data"]["demo"]["product"]["shoe"]["price"]
+# Zet de tekst.
+shelf.set_tekst(API.get_shelf_information())
 
 # Probeer het volgende.
 try:
@@ -65,43 +65,38 @@ try:
     while True:
 
         # Controleer of de display idle is
-        if display.is_idle and not display._is_fake_idle:
-            display.set_information(tekst_boven, tekst_onder)
-            display._is_fake_idle = True
+        if not display.thread_is_alive() and not display.is_fake_idle():
+
+            # Zet informatie op het scherm.
+            display.set_information(shelf.tekst_boven, shelf.tekst_onder)
+
+            # Toggle de fake idle.
+            display.fake_idle = True
 
         # Lees de reader uit.
         reader.read()
-        print(reader.uuid)
-
-        display.set_is_idle(True)
-        display._is_fake_idle = False
 
         # Controleer of het UUID niet hetzelfde is.
         if reader.uuid != reader.huidige_uuid:
-            print("Gelezen")
+
             # Als het een maat tag is.
             if not API.kan_koppelen():
 
                 # Geef aan dat de maat gescanned is.
                 maten = API.maat_gescanned(reader.uuid)
 
-                #Haal maten op en zet in variabele
-                display_maten = "Maten: "
-                for size in maten["data"]["sizes"]:
-                    display_maten += size.get('eu_size')[:2] + " "
+                # Controleer of de procress leeft.
+                if display.thread_is_alive():
 
-                #Haal display van de idle staat af
+                    # Stop het proces.
+                    display.information_process.terminate()
 
+                # Toon de informatie op het scherm.
+                display.information_in_process(shelf.tekst_boven, shelf.get_maten(maten))
 
-                # #Toon gevonden maten op de display
-                try:
-                    if display_process.is_alive():
-                        display.set_is_idle(False)
-                        display_process.terminate()
-                        display_process = display.information_in_process(tekst_boven, display_maten)
-                except:
-                    display.set_is_idle(False)
-                    display_process = display.information_in_process(tekst_boven, display_maten)
+                # Zet de idle terug naar false.
+                display.fake_idle = False
+
                 # Kijken of het request goed verlopen is.
                 if not type(maten) is bool:
 
@@ -147,16 +142,14 @@ try:
         # Controleer of de knop losgelaten is en fake ingedrukt is.
         if not button.is_pressed() and button.is_fake_pressed():
 
-            print("Knop is nu niet ingedrukt maar voorheen wel.")
-
-            print("Reader is uitgelezen: " + str(reader.read()))
-
+            # RFID leest iets uit.
             if reader.read():
 
+                # Fake pressed.
                 button.fake_pressed = False
 
         # Wacht 200 milliseconden.
-        sleep(0.2)
+        # sleep(0.2)
 
 # Anders doe dit.
 except KeyboardInterrupt:

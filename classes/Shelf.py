@@ -13,6 +13,43 @@ class Shelf:
         self._led_yellow = led_yellow
         self._led_green = led_green
 
+        self._tekst_boven = ""
+        self._tekst_onder = ""
+
+    @property
+    def tekst_boven(self) -> str:
+        """
+        Getter voor fake_pressed
+
+        :return: fake_pressed als boolean
+        """
+        return self._tekst_boven
+
+    @tekst_boven.setter
+    def tekst_boven(self, value: str) -> None:
+        """
+        Setter voor fake_pressed.
+        :param value: True of False
+        """
+        self._tekst_boven = value
+
+    @property
+    def tekst_onder(self) -> str:
+        """
+        Getter voor fake_pressed
+
+        :return: fake_pressed als boolean
+        """
+        return self._tekst_onder
+
+    @tekst_onder.setter
+    def tekst_onder(self, value: str) -> None:
+        """
+        Setter voor fake_pressed.
+        :param value: True of False
+        """
+        self._tekst_onder = value
+
     def bepaal_ledjes(self, response_api) -> None:
         """
         
@@ -56,6 +93,28 @@ class Shelf:
 
             # Ledje wordt rood.
             self._led_red.zet_aan()
+
+    def set_tekst(self, shelf_information) -> None:
+        """
+        
+        :param shelf_information: 
+        :return: 
+        """
+        self.tekst_boven = shelf_information["data"]["demo"]["product"]["shoe"]["name"]
+        self.tekst_onder = shelf_information["data"]["demo"]["product"]["shoe"]["price"]
+
+    def get_maten(self, maten) -> str:
+        """
+        
+        :param maten: 
+        :return: 
+        """
+        display_maten = "Maten: "
+
+        for size in maten["data"]["sizes"]:
+            display_maten += size.get('eu_size')[:2] + " "
+
+        return display_maten
 
 
 def main() -> None:
