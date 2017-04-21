@@ -1,4 +1,7 @@
+from time import sleep
+
 import RPi.GPIO as GPIO
+from multiprocessing import Process
 
 
 class Button:
@@ -15,6 +18,9 @@ class Button:
         """
         # sla de button pin op.
         self._button_input_pin = input_pin
+
+        # Knop process
+        self._button_process = None
 
         # Geef de pin setup op.
         GPIO.setup(self._button_input_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -41,6 +47,32 @@ class Button:
         :return: True of False
         """
         return self.fake_pressed
+
+    # noinspection PyBroadException
+    def process_is_alive(self):
+        """
+        Controleert of er een thread bestaat.
+        :return: True of False op basis op de thread bestaat, als boolean
+        """
+        try:
+            return self._button_process.is_alive()
+        except Exception as e:
+            return False
+
+    def start_process(self) -> None:
+        """
+        
+        :return: 
+        """
+        self._button_process = Process(target=self.timeout)
+        self._button_process.start()
+
+    def timeout(self) -> None:
+        """
+        
+        :return: 
+        """
+        sleep(10)
 
     @property
     def fake_pressed(self) -> bool:

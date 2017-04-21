@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
+from multiprocessing import Process
+
 
 class Led:
     """
@@ -17,6 +19,9 @@ class Led:
         # Sla de output pin op.
         self._led_output_pin = output_pin
 
+        # Process standaard op None.
+        self._led_process = None
+
         # Stel de pin setup in.
         GPIO.setup(self._led_output_pin, GPIO.OUT)
 
@@ -31,6 +36,34 @@ class Led:
         Zet de LED uit.
         """
         GPIO.output(self._led_output_pin, False)
+
+    # noinspection PyBroadException
+    def process_is_alive(self):
+        """
+        Controleert of er een thread bestaat.
+        :return: True of False op basis op de thread bestaat, als boolean
+        """
+        try:
+            return self._led_process.is_alive()
+        except Exception as e:
+            return False
+
+    def zet_aan_voor_10_seconden_in_process(self):
+        """
+        
+        :return: 
+        """
+        self._led_process = Process(target=self.zet_aan_voor_10_seconden)
+        self._led_process.start()
+
+    def zet_aan_voor_10_seconden(self) -> None:
+        """
+        
+        :return: 
+        """
+        self.zet_aan()
+        sleep(10)
+        self.zet_uit()
 
 
 def main() -> None:

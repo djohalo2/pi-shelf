@@ -1,6 +1,5 @@
 from __future__ import print_function, division, absolute_import, unicode_literals
 import sys
-from threading import ThreadError
 
 sys.path.append('/usr/local/lib/python3.4/RPLCD/')
 from RPLCD.i2c import CharLCD

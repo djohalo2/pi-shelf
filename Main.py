@@ -73,6 +73,9 @@ try:
             # Toggle de fake idle.
             display.fake_idle = True
 
+            # Reset de readers.
+            reader.reset()
+
         # Lees de reader uit.
         reader.read()
 
@@ -100,8 +103,14 @@ try:
                 # Kijken of het request goed verlopen is.
                 if not type(maten) is bool:
 
+                    # Kijk even of er ledjes branden.
+                    if shelf.process_is_alive():
+
+                        # Opflikkeren.
+                        shelf.leds_process.terminate()
+
                     # Handel de ledjes af.
-                    shelf.bepaal_ledjes(maten)
+                    shelf.bepaal_ledjes_in_process(maten)
 
             # Er gaat een nieuwe schoen gekoppelt worden
             if API.kan_koppelen():
@@ -134,7 +143,10 @@ try:
             if reader.heeft_uuid():
 
                 # Doe API call.
-                API.knop_ingedrukt(reader.uuid)
+                API.knop_ingedrukt(reader.laatste_uuid)
+
+                # Start het process.
+                button.start_process()
 
                 # Zet het fake indrukken op true.
                 button.fake_pressed = True
@@ -143,13 +155,13 @@ try:
         if not button.is_pressed() and button.is_fake_pressed():
 
             # RFID leest iets uit.
-            if reader.read():
+            if not button.process_is_alive():
 
                 # Fake pressed.
                 button.fake_pressed = False
 
         # Wacht 200 milliseconden.
-        # sleep(0.2)
+        sleep(0.2)
 
 # Anders doe dit.
 except KeyboardInterrupt:

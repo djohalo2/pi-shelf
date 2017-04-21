@@ -26,6 +26,9 @@ class Reader:
         # De huidige UUID.
         self._huidige_uuid = ""
 
+        # Laatste UUID.
+        self._laatste_uuid = ""
+
         # Fake gescanned
         self._fake_scanned = False
 
@@ -44,6 +47,7 @@ class Reader:
 
             # Sla de UUID op.
             self._uuid = '-'.join(str(uuid_part) for uuid_part in uuid)
+            self._laatste_uuid = self._uuid
 
             # Geef terug dat het gelukt is.
             return True
@@ -59,7 +63,15 @@ class Reader:
         Geeft terug of de waarde van de uuid leeg is of niet.
         :return: Boolean op basis van bovenstaande vraag.
         """
-        return not self._uuid == ""
+        return not self._laatste_uuid == ""
+
+    def reset(self) -> None:
+        """
+        
+        :return: 
+        """
+        self.uuid = ""
+        self.huidige_uuid = ""
 
     @property
     def fake_scanned(self) -> bool:
@@ -105,6 +117,24 @@ class Reader:
         :return: De uuid op de tag als string.
         """
         return self._uuid
+
+    @uuid.setter
+    def uuid(self, value: str) -> None:
+        """
+        Setter voor fake_scanned.
+
+        :param value: True of False
+        """
+        self._uuid = value
+
+    @property
+    def laatste_uuid(self) -> str:
+        """
+        Getter voor de laatste uuid.
+
+        :return: De uuid op de tag als string.
+        """
+        return self._laatste_uuid
 
 
 def main() -> None:

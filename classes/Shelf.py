@@ -1,3 +1,7 @@
+from multiprocessing import Process
+from time import sleep
+
+
 class Shelf:
     """
     
@@ -15,6 +19,8 @@ class Shelf:
 
         self._tekst_boven = ""
         self._tekst_onder = ""
+
+        self._leds_process = None
 
     @property
     def tekst_boven(self) -> str:
@@ -50,6 +56,26 @@ class Shelf:
         """
         self._tekst_onder = value
 
+    def process_is_alive(self):
+        """
+                Controleert of er een thread bestaat.
+                :return: True of False op basis op de thread bestaat, als boolean
+                """
+        try:
+            return self._leds_process.is_alive()
+        except Exception as e:
+            return False
+
+    def bepaal_ledjes_in_process(self, response_api):
+        """
+        
+        :param response_api: 
+        :return: 
+        """
+        self._leds_process = Process(target=self.bepaal_ledjes,
+                                     args=(response_api,))
+        self._leds_process.start()
+
     def bepaal_ledjes(self, response_api) -> None:
         """
         
@@ -74,6 +100,8 @@ class Shelf:
 
                     # Zet het groene ledje aan.
                     self._led_green.zet_aan()
+                    sleep(3)
+                    self._led_green.zet_uit()
 
                     # Zet op false.
                     andere_maat = False
@@ -87,12 +115,16 @@ class Shelf:
 
                 # Zet het gele ledje aan.
                 self._led_yellow.zet_aan()
+                sleep(3)
+                self._led_yellow.zet_uit()
 
         # Als er geen maten zijn.
         else:
 
             # Ledje wordt rood.
             self._led_red.zet_aan()
+            sleep(3)
+            self._led_red.zet_uit()
 
     def set_tekst(self, shelf_information) -> None:
         """
@@ -115,6 +147,23 @@ class Shelf:
             display_maten += size.get('eu_size')[:2] + " "
 
         return display_maten
+
+    @property
+    def leds_process(self) -> Process:
+        """
+        Getter voor fake_pressed
+
+        :return: fake_pressed als boolean
+        """
+        return self._leds_process
+
+    @leds_process.setter
+    def leds_process(self, value) -> None:
+        """
+        Setter voor fake_pressed.
+        :param value: True of False
+        """
+        self._leds_process = value
 
 
 def main() -> None:
