@@ -42,7 +42,7 @@ class Screen:
     # function after button press
     def notify(self):
         notification = ' Een medewerker\r\n  komt er aan!'
-        self.led.write_string(notification)
+        self.lcd.write_string(notification)
         input('Retailer notified')
 
     def is_idle(self) -> bool:

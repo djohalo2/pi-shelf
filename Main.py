@@ -65,16 +65,16 @@ try:
     while True:
 
         # Controleer of de display idle is
-        # if display.is_idle and not display._is_fake_idle:
-        #     display.set_information(tekst_boven, tekst_onder)
-        #     display._is_fake_idle = True
+        if display.is_idle and not display._is_fake_idle:
+            display.set_information(tekst_boven, tekst_onder)
+            display._is_fake_idle = True
 
         # Lees de reader uit.
         reader.read()
         print(reader.uuid)
 
-        # display.set_is_idle(True)
-        # display._is_fake_idle = False
+        display.set_is_idle(True)
+        display._is_fake_idle = False
 
         # Controleer of het UUID niet hetzelfde is.
         if reader.uuid != reader.huidige_uuid:
@@ -94,14 +94,14 @@ try:
 
 
                 # #Toon gevonden maten op de display
-                # try:
-                #     if display_process.is_alive():
-                #         display.set_is_idle(False)
-                #         display_process.terminate()
-                #         display_process = display.information_in_process(tekst_boven, display_maten)
-                # except:
-                #     display.set_is_idle(False)
-                #     display_process = display.information_in_process(tekst_boven, display_maten)
+                try:
+                    if display_process.is_alive():
+                        display.set_is_idle(False)
+                        display_process.terminate()
+                        display_process = display.information_in_process(tekst_boven, display_maten)
+                except:
+                    display.set_is_idle(False)
+                    display_process = display.information_in_process(tekst_boven, display_maten)
                 # Kijken of het request goed verlopen is.
                 if not type(maten) is bool:
 
