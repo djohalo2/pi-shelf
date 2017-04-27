@@ -25,25 +25,27 @@ class Screen:
     lcd = CharLCD(address=0x3f, port=1)
     lcd.backlight_enabled = True
 
-    # Euro symbol defining and creating
-    euro = (0b00110, 0b01001, 0b11110, 0b01000, 0b11110, 0b01001, 0b00110, 0b00000)
-    lcd.create_char(1, euro)
-
-    def __init__(self):
+    def __init__(self, timeout_time: int = 30):
         """
         Uitvoeren code bij initialiseren klasse
         """
+        self._timeout_time = timeout_time
+
         self._fake_idle = False
 
         self._information_process = None
 
         self._demo_info = []
 
+        # Euro symbol defining and creating
+        euro = (0b00110, 0b01001, 0b11110, 0b01000, 0b11110, 0b01001, 0b00110, 0b00000)
+        self._euro = self.lcd.create_char(1, euro)
+
     # function after button press
     def notify(self):
-        notification = ' Een medewerker\r\n  komt er aan!'
-        self.lcd.write_string(notification)
-        input('Retailer notified')
+        self.lcd.clear()
+
+        self.lcd.write_string(' Een medewerker\r\n  komt er aan!')
 
     def is_fake_idle(self):
         """
@@ -95,13 +97,16 @@ class Screen:
         # Schrijf de informatie naar het scherm.
         self.lcd.write_string(tekst_boven)
         self.lcd.write_string('\r\n')
+
+        if not need_timeout:
+            self.lcd.write_string(self.unichr(1))
         self.lcd.write_string(tekst_onder)
 
         # Kijk of er een timeout nodig is.
         if need_timeout:
 
             # Slaap voor 3 seconden.
-            sleep(3)
+            sleep(self._timeout_time)
 
     @property
     def fake_idle(self) -> bool:

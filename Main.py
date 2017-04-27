@@ -1,6 +1,5 @@
 import os
 import RPi.GPIO as GPIO
-
 from dotenv import load_dotenv, find_dotenv
 from time import sleep
 
@@ -13,6 +12,7 @@ from classes.Reader import Reader
 from classes.Screen import Screen
 from classes.Shelf import Shelf
 from classes.State import State
+from classes.Timer import Timer
 
 from util.GPIOFuckUp import GPIOFuckUp
 
@@ -29,7 +29,7 @@ load_dotenv(find_dotenv())
 afstandsensor = Afstandsensor(int(os.environ.get("DISTANCE_SENSOR_PIN")))
 
 # Instantieer knop.
-button = Button(int(os.environ.get("BUTTON_PIN")))
+button = Button(int(os.environ.get("BUTTON_PIN")), int(os.environ.get("INFORMATION_TIMEOUT")))
 
 # Instantieer ledjes.
 led_green = Led(int(os.environ.get("LED_GREEN_PIN")))
@@ -40,29 +40,44 @@ led_red = Led(int(os.environ.get("LED_RED_PIN")))
 reader = Reader()
 
 # Instantieer display.
-display = Screen()
+display = Screen(int(os.environ.get("INFORMATION_TIMEOUT")))
 
 
 # Instantieer API.
 API = API(os.environ.get("BASE_URL"), os.environ.get("PRIVATE_KEY"))
 
 # Instantieer shelf.
-shelf = Shelf(led_red, led_yellow, led_green)
+shelf = Shelf(led_red, led_yellow, led_green, int(os.environ.get("INFORMATION_TIMEOUT")))
 
 # Instantieer states.
 state = State()
 
+# Information timer
+timer_information = Timer()
+
 # Alle GPIO pinnen worden op false gezet
 GPIOFuckUp()
-
-# Zet de tekst.
-shelf.set_tekst(API.get_shelf_information())
 
 # Probeer het volgende.
 try:
 
     # Loop dit door zolang het true is.
     while True:
+
+        # Controleer of de timer niet loopt.
+        if not timer_information.process_is_alive():
+
+            # Update de demo informatie van de shelf
+            shelf.set_tekst(API.get_shelf_information())
+
+            # Controleer of het display niets aan het doen is.
+            if not display.thread_is_alive():
+
+                # Update display met nieuwe informatie
+                display.set_information(shelf.tekst_boven, shelf.tekst_onder)
+
+                # Start de timer.
+                timer_information.start_process(int(os.environ.get("INFORMATION_TIMEOUT")))
 
         # Controleer of de display idle is
         if not display.thread_is_alive() and not display.is_fake_idle():
@@ -100,6 +115,15 @@ try:
 
                 # Zet de idle terug naar false.
                 display.fake_idle = False
+
+                # Controleer of de process van button leeft
+                if button.process_is_alive():
+
+                    # Stop het process van button
+                    button.button_process.terminate()
+
+                    # Zet fake_pressed op False
+                    button.fake_pressed = False
 
                 # Kijken of het request goed verlopen is.
                 if not type(maten) is bool:
@@ -148,6 +172,9 @@ try:
                 # Doe API call.
                 API.knop_ingedrukt(reader.laatste_uuid)
 
+                # Toon op het display dat een medewerker eraan komt
+                display.notify()
+
                 # Start het process.
                 button.start_process()
 
@@ -162,6 +189,8 @@ try:
 
                 # Fake pressed.
                 button.fake_pressed = False
+
+                reader.reset()
 
         # Wacht 200 milliseconden.
         sleep(0.2)

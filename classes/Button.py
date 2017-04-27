@@ -10,7 +10,7 @@ class Button:
     Klasse om buttons uit te lezen die verbonden zijn met een raspberry
     """
 
-    def __init__(self, input_pin: int) -> None:
+    def __init__(self, input_pin: int, timeout_time: int = 30) -> None:
         """
         Code die wordt uitgevoerd bij het instantiëren van de klasse
 
@@ -19,6 +19,7 @@ class Button:
         """
         # sla de button pin op.
         self._button_input_pin = input_pin
+        self._timeout_time = timeout_time
 
         # Knop process
         self._button_process = None
@@ -71,7 +72,25 @@ class Button:
         """
         Start een timeout van 10 seconden.
         """
-        sleep(10)
+        sleep(self._timeout_time)
+
+    @property
+    def button_process(self) -> Process:
+        """
+        Getter voor button_process
+
+        :return: button_process als Process
+        """
+        return self._button_process
+
+    @button_process.setter
+    def button_process(self, value: Process) -> None:
+        """
+        Setter voor button_process.
+
+        :param value: Process
+        """
+        self._button_process = value
 
     @property
     def fake_pressed(self) -> bool:

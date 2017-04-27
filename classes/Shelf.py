@@ -9,7 +9,7 @@ class Shelf:
     De klasse shelf.
     """
 
-    def __init__(self, led_red: Led, led_yellow: Led, led_green: Led) -> None:
+    def __init__(self, led_red: Led, led_yellow: Led, led_green: Led, timeout_time: int = 30) -> None:
         """
         
         :param led_red: 
@@ -20,6 +20,8 @@ class Shelf:
         self._led_red = led_red
         self._led_yellow = led_yellow
         self._led_green = led_green
+
+        self._timeout_time = timeout_time
 
         # Zet de teksten.
         self._tekst_boven = ""
@@ -135,7 +137,7 @@ class Shelf:
                     self._led_green.zet_aan()
 
                     # Wacht 3 seconden.
-                    sleep(3)
+                    sleep(self._timeout_time)
 
                     # Zet het groene ledje uit.
                     self._led_green.zet_uit()
@@ -156,7 +158,7 @@ class Shelf:
                 self._led_yellow.zet_aan()
 
                 # Wacht 3 seconden.
-                sleep(3)
+                sleep(self._timeout_time)
 
                 # Zet het gele ledje uit.
                 self._led_yellow.zet_uit()
@@ -168,7 +170,7 @@ class Shelf:
             self._led_red.zet_aan()
 
             # Wacht 3 seconden.
-            sleep(3)
+            sleep(self._timeout_time)
 
             # Zet het rode ledje uit.
             self._led_red.zet_uit()
@@ -181,7 +183,7 @@ class Shelf:
         """
         # Zet de bovenste regel.
         self.tekst_boven = shelf_information["data"]["demo"]["product"][
-            'shoe']["name"]
+            'shoe']["name"] + " - " + shelf_information["data"]["demo"]["product"]["shoe"]["brand"]
 
         # Zet de onderste regel.
         self.tekst_onder = shelf_information["data"]["demo"]["product"][
@@ -198,11 +200,14 @@ class Shelf:
         # De display string.
         display_maten = "Maten: "
 
-        # Ga door alle maten in.
-        for size in maten["data"]["sizes"]:
+        # Als er maten zijn
+        if not type(maten) is bool:
 
-            # Voeg de maat toe aan de string.
-            display_maten += size.get('eu_size')[:2] + " "
+            # Ga door alle maten in.
+            for size in maten["data"]["sizes"]:
+
+                # Voeg de maat toe aan de string.
+                display_maten += size.get('eu_size')[:2] + " "
 
         # Geef de maten terug.
         return display_maten

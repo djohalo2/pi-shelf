@@ -146,6 +146,7 @@ class Reader:
         """
         self.uuid = ""
         self.huidige_uuid = ""
+        self._laatste_uuid = ""
 
 
 def main() -> None:
